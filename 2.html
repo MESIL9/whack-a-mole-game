@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>두더지 잡기 게임</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: sans-serif;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-gap: 10px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .cell {
+      width: 100px;
+      height: 100px;
+      background-color: #eee;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 24px;
+    }
+    .mole {
+      background-color: brown;
+      color: white;
+    }
+    #score {
+      margin-top: 20px;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🐹 두더지 잡기 게임</h1>
+  <p>제한 시간: <span id="time">10</span>초</p>
+  <div class="grid" id="gameGrid"></div>
+  <div id="score">점수: 0</div>
+
+  <script>
+    const grid = document.getElementById("gameGrid");
+    const scoreDisplay = document.getElementById("score");
+    const timeDisplay = document.getElementById("time");
+
+    let score = 0;
+    let currentMole = null;
+    let gameInterval, countdown;
+
+    // 셀 생성
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.addEventListener("click", () => {
+        if (cell === currentMole) {
+          score++;
+          scoreDisplay.textContent = "점수: " + score;
+          currentMole.classList.remove("mole");
+          currentMole = null;
+        }
+      });
+      grid.appendChild(cell);
+    }
+
+    const cells = document.querySelectorAll(".cell");
+
+    // 게임 시작
+    let timeLeft = 10;
+    countdown = setInterval(() => {
+      timeLeft--;
+      timeDisplay.textContent = timeLeft;
+      if (timeLeft === 0) {
+        clearInterval(countdown);
+        clearInterval(gameInterval);
+        alert("게임 종료! 점수: " + score);
+      }
+    }, 1000);
+
+    gameInterval = setInterval(() => {
+      if (currentMole) {
+        currentMole.classList.remove("mole");
+      }
+      const randomIndex = Math.floor(Math.random() * cells.length);
+      currentMole = cells[randomIndex];
+      currentMole.classList.add("mole");
+    }, 800);
+  </script>
+</body>
+</html>
